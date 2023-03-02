@@ -52,7 +52,6 @@ executeTradingStrategyForFinanace =(tradeMarketData,threshold,averagePriceValue,
     let finalBalance = accountBalance;
     console.log("numberofpurshaced = " + numberofpurshaced + "\t" + "numberofSelled ="  +numberofSelled )
     console.log("initialBalance = " +  unchangedinitialBalance +"\t"+ "finalBalance = " +  finalBalance);
-    console.log(str);
    return str;
 }
 
