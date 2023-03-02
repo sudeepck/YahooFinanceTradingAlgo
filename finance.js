@@ -3,6 +3,8 @@ const app = express()
 const {executeTradingStrategyForFinanace} = require('./executeTradingStrategyForFinanace')
 const request = require('request')
 const {data} = require('./brokerageFees');
+const {unixTimeStamptoIST} = require('./unixTimeStamptoIST');
+
 
 app.get('/',(req,res)=>{
     res.send("Trading Platform")
@@ -44,15 +46,17 @@ app.get('/trading',async(req,res)=>{
             } else {
                 tradeMarketData =  data
                 let tradeMarketDataArray = [];
-                console.log(tradeMarketData["chart"]["result"])
+              
                 if(tradeMarketData["chart"]["result"] === null){
                     res.send("Invalid Ticker");
                 }else{
                 let length = tradeMarketData["chart"]["result"][0]["timestamp"].length;
-
+               let dataAndTime =  unixTimeStamptoIST(tradeMarketData["chart"]["result"][0]["timestamp"])
+                console.log(dataAndTime[1]["Date"]);
                 for (let i = 0; i <length; i++) {
                     const obj = {
-                        Date: tradeMarketData["chart"]["result"][0]["timestamp"][i],
+                        Date: dataAndTime[i]["Date"],
+                        Time:dataAndTime[i]["Time"],
                         Low: tradeMarketData["chart"]["result"][0]["indicators"]["quote"][0]["low"][i],
                         High: tradeMarketData["chart"]["result"][0]["indicators"]["quote"][0]["high"][i],
                         Open :tradeMarketData["chart"]["result"][0]["indicators"]["quote"][0]["open"][i],
@@ -61,7 +65,7 @@ app.get('/trading',async(req,res)=>{
                     };
                     tradeMarketDataArray.push(obj);
                 }
-                // console.log(tradeMarketDataArray)
+
                 str = executeTradingStrategyForFinanace(tradeMarketDataArray,thresholdValue,averagePriceValue,accountBalance,str,brokerageBuyFee,brokerageSellFee);
                 res.send(str);
                 }
