@@ -14,7 +14,7 @@ app.get('/trading',async(req,res)=>{
     let str = "";
     let thresholdValue = parseFloat(threshold); 
     let averagePriceValue = parseFloat(averagePrice) // example reference price 0.7 96.5  11947.4
-    let accountBalance = 1000; 
+    let accountBalance = 100000; 
 
     let brokerageBuyFee = [{percentage:0.03},{amount :20}]
     let brokerageSellFee = [{percentage:0.03},{amount :20}]
