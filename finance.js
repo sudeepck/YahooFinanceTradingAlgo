@@ -44,7 +44,10 @@ app.get('/trading',async(req,res)=>{
             } else {
                 tradeMarketData =  data
                 let tradeMarketDataArray = [];
-                
+                console.log(tradeMarketData["chart"]["result"])
+                if(tradeMarketData["chart"]["result"] === null){
+                    res.send("Invalid Ticker");
+                }else{
                 let length = tradeMarketData["chart"]["result"][0]["timestamp"].length;
 
                 for (let i = 0; i <length; i++) {
@@ -58,8 +61,10 @@ app.get('/trading',async(req,res)=>{
                     };
                     tradeMarketDataArray.push(obj);
                 }
+                // console.log(tradeMarketDataArray)
                 str = executeTradingStrategyForFinanace(tradeMarketDataArray,thresholdValue,averagePriceValue,accountBalance,str,brokerageBuyFee,brokerageSellFee);
                 res.send(str);
+                }
             }
         })
 })
