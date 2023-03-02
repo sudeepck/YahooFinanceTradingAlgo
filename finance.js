@@ -52,7 +52,7 @@ app.get('/trading',async(req,res)=>{
                 }else{
                 let length = tradeMarketData["chart"]["result"][0]["timestamp"].length;
                let dataAndTime =  unixTimeStamptoIST(tradeMarketData["chart"]["result"][0]["timestamp"])
-                console.log(dataAndTime[1]["Date"]);
+               
                 for (let i = 0; i <length; i++) {
                     const obj = {
                         Date: dataAndTime[i]["Date"],
