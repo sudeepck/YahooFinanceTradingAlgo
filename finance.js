@@ -45,31 +45,11 @@ app.get('/trading',async(req,res)=>{
             console.log('Status:', response.statusCode);
             } else {
                 tradeMarketData =  data
-                let tradeMarketDataArray = [];
-              
-                if(tradeMarketData["chart"]["result"] === null){
-                    res.send("Invalid Ticker");
-                }else{
-                let length = tradeMarketData["chart"]["result"][0]["timestamp"].length;
-               let dataAndTime =  unixTimeStamptoIST(tradeMarketData["chart"]["result"][0]["timestamp"])
-               
-                for (let i = 0; i <length; i++) {
-                    const obj = {
-                        Date: dataAndTime[i]["Date"],
-                        Time:dataAndTime[i]["Time"],
-                        Low: tradeMarketData["chart"]["result"][0]["indicators"]["quote"][0]["low"][i],
-                        High: tradeMarketData["chart"]["result"][0]["indicators"]["quote"][0]["high"][i],
-                        Open :tradeMarketData["chart"]["result"][0]["indicators"]["quote"][0]["open"][i],
-                        Close:tradeMarketData["chart"]["result"][0]["indicators"]["quote"][0]["close"][i],
-                        volume :tradeMarketData["chart"]["result"][0]["indicators"]["quote"][0]["volume"][i],
-                    };
-                    tradeMarketDataArray.push(obj);
-                }
-
+                let tradeMarketDataArray = formatData(tradeMarketData);
+              console.log(tradeMarketDataArray) 
                 str = executeTradingStrategyForFinanace(tradeMarketDataArray,thresholdValue,averagePriceValue,accountBalance,str,brokerageBuyFee,brokerageSellFee);
                 res.send(str);
                 }
-            }
         })
 })
 
