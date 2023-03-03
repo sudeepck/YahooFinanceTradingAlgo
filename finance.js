@@ -4,6 +4,7 @@ const {executeTradingStrategyForFinanace} = require('./executeTradingStrategyFor
 const request = require('request')
 const {data} = require('./brokerageFees');
 const {unixTimeStamptoIST} = require('./unixTimeStamptoIST');
+const {formatData} = require('./FormatData'); 
 
 
 app.get('/',(req,res)=>{
