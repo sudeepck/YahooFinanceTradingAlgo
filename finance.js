@@ -1,57 +1,31 @@
+
 const express = require('express')
 const app = express()
 const {executeTradingStrategyForFinanace} = require('./executeTradingStrategyForFinanace')
 const request = require('request')
-const {data} = require('./brokerageFees');
-const {unixTimeStamptoIST} = require('./unixTimeStamptoIST');
+const {brokerageCharges} = require('./brokerageFees');
 const {formatData} = require('./FormatData'); 
-
 
 app.get('/',(req,res)=>{
     res.send("Trading Platform")
 })
 
 app.get('/trading',async(req,res)=>{
-    const { companyTiker, averagePrice,threshold,brokerageName}= req.query
-
-    let str = "";
-    let thresholdValue = parseFloat(threshold); 
-    let averagePriceValue = parseFloat(averagePrice) // example reference price 0.7 96.5  11947.4
-    let accountBalance = 100000; 
-
-    let brokerageBuyFee = [{percentage:0.03},{amount :20}]
-    let brokerageSellFee = [{percentage:0.03},{amount :20}]
-
-    let tradeMarketData;
-
-    if(brokerageName){
-        data.forEach(function(item) {
-            if(item.name === brokerageName){
-                brokerageBuyFee[0] = {"percentage" :item.brokerageBuyFee[0].percentage};
-                brokerageBuyFee[1] = {"amount":item.brokerageBuyFee[1].amount};
-                brokerageSellFee[0] = {"percentage" :item.brokerageBuyFee[0].percentage};
-                brokerageSellFee[1] = {"amount":item.brokerageBuyFee[1].amount};
-            }
-        });
-    }
-
-    let url = `https://query1.finance.yahoo.com/v8/finance/chart/${companyTiker}?range=30d&interval=5m`;    
-        request.get({
-            url: url,
-            json: true,
-            headers: {'User-Agent': 'request'}
-        }, (err, response, data) => {   
-            if (err) {
+    let { companyTiker, averagePrice,threshold,brokerageName,start,end}= req.query
+    
+    let {brokerageBuyFee,brokerageSellFee} = brokerageCharges(brokerageName);
+    let = url = `https://query1.finance.yahoo.com/v8/finance/chart/${companyTiker}?range=30d&interval=5m`; 
+       
+    request.get({url: url,json: true,headers: {'User-Agent': 'request'}}, (err, response, data) => {   
+        if (err) {
             console.log('Error:', err);
             console.log('Status:', response.statusCode);
-            } else {
-                tradeMarketData =  data
-                let tradeMarketDataArray = formatData(tradeMarketData);
-              console.log(tradeMarketDataArray) 
-                str = executeTradingStrategyForFinanace(tradeMarketDataArray,thresholdValue,averagePriceValue,accountBalance,str,brokerageBuyFee,brokerageSellFee);
+        } else {
+                let tradeMarketDataArray = formatData(data);
+                str = executeTradingStrategyForFinanace(tradeMarketDataArray,threshold,averagePrice,brokerageBuyFee,brokerageSellFee);
                 res.send(str);
-                }
-        })
+        }
+    })
 })
 
 app.listen(3000,()=>{
