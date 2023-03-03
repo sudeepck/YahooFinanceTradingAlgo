@@ -39,8 +39,7 @@ executeTradingStrategyForFinanace =(tradeMarketData,threshold,averagePriceValue,
             numberofSelled++;   
             profit = previousBuyedValue < currentPriceValue ? "profit" :"loss";
 
-            str +=`${x.Date} &nbsp; &nbsp; ${x.Time} &nbsp; &nbsp; SELL&emsp;&emsp;&emsp;&emsp;&emsp;${[averagePriceValue]} &emsp;&emsp;&emsp;&emsp;${[Math.floor(currentPriceValue)]} &emsp;&emsp;&emsp;&emsp; ${[threshold]} &emsp;&emsp;&emsp;&emsp;&emsp;  ${[Math.floor(accountBalance)]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${[Math.floor(accountValue)]} &emsp; ${profit} <br/>`
-            return {[x.Date] : "it's time to Sell the stock "}
+            str +=`${x.Date} &nbsp; &nbsp; ${x.Time} &nbsp; &nbsp; SELL&emsp;&emsp;&emsp;&emsp;&emsp;${[averagePriceValue]} &emsp;&emsp;&emsp;&emsp;${[currentPriceValue.toFixed(2)]} &emsp;&emsp;&emsp;&emsp; ${[threshold]} &emsp;&emsp;&emsp;&emsp;&emsp;  ${[accountBalance.toFixed(2)]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${[accountValue]} &emsp; ${profit} <br/>`
         } else if (priceDifference < threshold && accountBalance >= currentPriceValue && buyed == 0) {
             previousBuyedValue = currentPriceValue;//94
 
@@ -54,11 +53,10 @@ executeTradingStrategyForFinanace =(tradeMarketData,threshold,averagePriceValue,
             buyed++;
             numberofpurshaced++;
             flag =1;
-              str +=`${x.Date} &nbsp; &nbsp; ${x.Time} &nbsp; &nbsp; BUY&emsp;&emsp;&emsp;&emsp;&emsp;${[averagePriceValue]} &emsp;&emsp;&emsp;&emsp;${[Math.floor(currentPriceValue)]} &emsp;&emsp;&emsp;&emsp; ${[threshold]} &emsp;&emsp;&emsp;&emsp;&emsp; ${[Math.floor(accountBalance)]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${[Math.floor(accountValue)]} <br/>`
-            return {[x.Date] : "it's time to buy the stock "}
+              str +=`${x.Date} &nbsp; &nbsp; ${x.Time} &nbsp; &nbsp; BUY&emsp;&emsp;&emsp;&emsp;&emsp;${[averagePriceValue]} &emsp;&emsp;&emsp;&emsp;${[currentPriceValue.toFixed(2)]} &emsp;&emsp;&emsp;&emsp; ${[threshold]} &emsp;&emsp;&emsp;&emsp;&emsp; ${[accountBalance.toFixed(2)]} &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${[accountValue.toFixed(2)]} <br/>`
+           
         } else {
             flag = 0;
-            return {[x.Date] : `Price difference is within the threshold (${priceDifference}), no action taken. or no stocks buyed yet`};
         }
     })
 
