@@ -1,5 +1,10 @@
-executeTradingStrategyForFinanace =(tradeMarketData,threshold,averagePriceValue,accountBalance,str,brokeragebuyFee,brokerageSellFee) =>
+executeTradingStrategyForFinanace =(tradeMarketData,threshold,averagePriceValue,brokeragebuyFee,brokerageSellFee) =>
 {
+    threshold = parseFloat(threshold); 
+    averagePriceValue = parseFloat(averagePriceValue) 
+    let accountBalance = 100000
+    let str = "";
+
     str +=`Date &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Time &nbsp; &nbsp;&nbsp; BuyOrSell &nbsp;&nbsp; &nbsp;&nbsp;  avgPriceValue &emsp; current price &emsp; thresholdValue &emsp;  accountBalance &emsp; accountValue  &emsp; profitOrLoss <br/>`;
     let accountValue = accountBalance;
     let unchangedinitialBalance = accountBalance;
@@ -8,10 +13,18 @@ executeTradingStrategyForFinanace =(tradeMarketData,threshold,averagePriceValue,
    let numberofpurshaced = 0,numberofSelled =    0
        let previousBuyedValue = 0;
     let profit = 0;
+
+    let avg = 0,count=0;
+
    
     let tradingResult = data.map(x=>{
        
         let currentPriceValue = (parseInt(x.High) + parseInt(x.Low))/2
+        if(!isNaN(currentPriceValue)){
+             avg += currentPriceValue;
+            count++;
+        }
+       
         let priceDifference = Math.abs(currentPriceValue - averagePriceValue);
         // if sell  else buy
         if (priceDifference > threshold && buyed == 1 && previousBuyedValue < currentPriceValue) {
@@ -49,9 +62,12 @@ executeTradingStrategyForFinanace =(tradeMarketData,threshold,averagePriceValue,
         }
     })
 
+
+    console.log("avg" + (avg/count))
     let finalBalance = accountBalance;
-    console.log("numberofpurshaced = " + numberofpurshaced + "\t" + "numberofSelled ="  +numberofSelled +"\n")
-    console.log("initialBalance = " +  unchangedinitialBalance +"\t"+ "finalBalance = " +  finalBalance +"\n");
+    console.log("numberofpurshaced = " + numberofpurshaced + "\t" + "numberofSelled ="  +numberofSelled )
+    console.log("initialBalance = " +  unchangedinitialBalance +"\t"+ "finalBalance = " +  finalBalance);
+
    return str;
 }
 
