@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <table style="width:100%">
+        <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>BUY or SELL</th>
+            <th>avgPriceValue</th>
+            <th>current price</th>
+            <th>thresholdValue</th>
+            <th>accountBalance</th>
+            <th>accountValue</th>
+            <th>Profit or Loss</th>
+        </tr>
+
+        <%let accountBalance = 100000 %>
+        <%let accountValue = accountBalance %>
+        <%let unchangedinitialBalance = accountBalance %>
+        <%let sellingPrice = 0%>
+        <% let purchasePrice = 0%>
+        <%let numShares = 0%>
+        <%  let buyed = 0;%>
+        <% let numberofpurshaced = 0%>
+        <% let numberofSelled =    0%>
+        <% let previousBuyedValue = 0;%>
+        <% let profit = 0;%>
+        <% let avg = 0%>
+        <% let count=0%>
+        <% let buy="BUY"%>
+        <% let sell="SELL"%>
+
+
+
+        <% tradingData.forEach(function(item) { %>
+        
+           <%let currentPriceValue = (parseInt(item.High) + parseInt(item.Low))/2%>
+           <%   if(!isNaN(currentPriceValue)){
+                    avg += currentPriceValue;
+                    count++;
+            } %>
+           <% let priceDifference = Math.abs(currentPriceValue - averagePrice)%>
+
+    
+            
+        <% if (priceDifference > threshold && buyed == 1 && previousBuyedValue < currentPriceValue) { %>
+                <% flag =1 %>
+                <%sellingPrice += currentPriceValue;%>
+                <%let brokeageFeeForSell = Math.min(brokerageSellFee[1].amount ,(currentPriceValue * brokerageSellFee[0].percentage));%>
+               <% accountBalance = accountBalance + currentPriceValue -brokeageFeeForSell%>
+                <% accountValue = accountBalance -brokeageFeeForSell %>
+                <%numShares++;%>
+                <%buyed = buyed -1;%>
+                <%numberofSelled++;%>              
+                
+                <% let profit = 0%>
+                <% if( previousBuyedValue < currentPriceValue){ %>
+                    <% profit = "profit"  %>
+                <% }else{%>
+                     <% profit = "loss"%>
+                <%}%>
+                
+                
+
+                <tr>
+                    <td><%= item.Date %></td>
+                    <td><%= item.Time %></td>
+                    <td><%= sell %></td>
+                    <td><%= averagePrice%></td>
+                    <td><%=currentPriceValue%></td>
+                    <td><%= threshold%></td>
+                    <td><%= accountBalance.toFixed(2)%></td>
+                    <td><%=accountValue.toFixed(2)%></td>
+                    <td><%=profit%></td>
+                </tr>
+        <%}else if (priceDifference < threshold && accountBalance >= currentPriceValue && buyed == 0) { %>
+            <%previousBuyedValue = currentPriceValue %>
+
+            <%let brokeageFeeForBuy = Math.min(brokerageBuyFee[1].amount,(currentPriceValue * brokerageBuyFee[0].percentage))%>
+          
+            
+            <%accountBalance =accountBalance- currentPriceValue -brokeageFeeForBuy%>
+            <%accountValue = accountBalance + currentPriceValue -brokeageFeeForBuy%>
+
+
+            <%numShares++%>
+            <%buyed = buyed  + 1%>
+            <%numberofpurshaced++%>
+            <%flag =1 %>  
+
+            <tr>
+                <td><%= item.Date %></td>
+                <td><%= item.Time %></td>
+                 <td><%=buy%></td>
+                <td><%= averagePrice%></td>
+                <td><%=currentPriceValue%></td>
+                <td><%= threshold%></td>
+                <td><%= accountBalance.toFixed(2)%></td>
+                <td><%=accountValue.toFixed(2)%></td>
+            </tr>
+        <%}%>
+    <% }); %>
+    </table>
+</body>
+</html>
