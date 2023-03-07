@@ -1,7 +1,6 @@
 
 const express = require('express')
 const app = express()
-const {executeTradingStrategyForFinanace} = require('./executeTradingStrategyForFinanace')
 const {brokerageCharges} = require('./brokerageFees');
 const {formatData} = require('./FormatData'); 
 const path = require('path');
