@@ -4,6 +4,12 @@ const app = express()
 const {executeTradingStrategyForFinanace} = require('./executeTradingStrategyForFinanace')
 const {brokerageCharges} = require('./brokerageFees');
 const {formatData} = require('./FormatData'); 
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/'))
 
 
 app.get('/',(req,res)=>{
@@ -18,12 +24,12 @@ app.get('/trading',async(req,res)=>{
 
     const response = await fetch(url);
     const data = await response.json();
-    let tradeMarketDataArray = formatData(data);
-    str = executeTradingStrategyForFinanace(tradeMarketDataArray,threshold,averagePrice,brokerageBuyFee,brokerageSellFee);
-    res.send(str);
+    let tradeMarketDataArray = await formatData(data);
+    let tradingData =  await tradeMarketDataArray.map(trade=>trade);
+
+        res.render('es', { tradingData,threshold,averagePrice,brokerageBuyFee,brokerageSellFee});
 })
 
 app.listen(3000,()=>{
     console.log("Connected to server");
 })
-
